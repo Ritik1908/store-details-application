@@ -1,19 +1,20 @@
 package com.practice.com.storedetails.model
 
+import org.bson.types.ObjectId
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.DBRef
+import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.stereotype.Indexed
 import java.util.*
-import javax.persistence.*
 
-@Entity
-class StoreDetails(
+@Document
+data class StoreDetails(
+    @Id
+    var objId: String = ObjectId().toString(),
+    var id: Int,
     var name: String,
     var status: String,
     var createdAt: Date,
     var updatedAt: Date,
-    @OneToMany(cascade = [CascadeType.ALL])
     var addressPeriod: List<AddressPeriod>
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    open var id: Long? = null
-}
+)

@@ -1,8 +1,8 @@
 package com.practice.com.storedetails.model
 
-import javax.persistence.*
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
 
-@Entity
 data class StoreAddress(
     var street: String,
     var houseNumber: Int,
@@ -10,9 +10,4 @@ data class StoreAddress(
     var postalCode: Int,
     var city: String,
     var country: String
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    open var id: Long? = null
-}
+)
