@@ -10,7 +10,6 @@ import java.util.*
 @Document
 data class StoreDetails(
     @Id
-    var objId: String = ObjectId().toString(),
     var id: Int,
     var name: String,
     var status: String,

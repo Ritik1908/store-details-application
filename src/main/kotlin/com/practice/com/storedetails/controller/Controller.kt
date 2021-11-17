@@ -1,6 +1,7 @@
 package com.practice.com.storedetails.controller
 
 import com.practice.com.storedetails.dao.StoreDetailsJPA
+import com.practice.com.storedetails.exception.NotFoundException
 import com.practice.com.storedetails.model.StoreDetails
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -11,12 +12,20 @@ class Controller @Autowired constructor(val storeDetailsJPA: StoreDetailsJPA) {
 
     @GetMapping("/store-service/v1/stores")
     fun getStores(): MutableList<StoreDetails> {
-        return storeDetailsJPA.findAll()
+        val data = storeDetailsJPA.findAll()
+        if(data.isEmpty()) {
+            throw NotFoundException("No records present in database")
+        }
+        return data
     }
 
     @GetMapping("/store-service/v1/stores/{id}")
-    fun getStore(@PathVariable id: String): Optional<StoreDetails> {
-        return storeDetailsJPA.findById(id)
+    fun getStore(@PathVariable id: Int): Optional<StoreDetails> {
+        val data = storeDetailsJPA.findById(id)
+        if(data.isEmpty()) {
+            throw NotFoundException("No store found with given id")
+        }
+        return data
     }
 
     @PostMapping("/store-service/v1/stores")
