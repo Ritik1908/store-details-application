@@ -8,7 +8,6 @@ import com.practice.com.storedetails.model.StoreDetails
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.converter.json.MappingJacksonValue
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 class Controller @Autowired constructor(val storeDetailsJPA: StoreDetailsJPA) {

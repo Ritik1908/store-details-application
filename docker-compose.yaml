@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  store-service:
+    image: ritik1908/learn-microservice-practice-task:0.0.1-SNAPSHOT
+    ports:
+      - "8080:8080"
