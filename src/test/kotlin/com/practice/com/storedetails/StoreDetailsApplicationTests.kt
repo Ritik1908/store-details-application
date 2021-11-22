@@ -1,18 +1,16 @@
 package com.practice.com.storedetails
 
 import com.practice.com.storedetails.controller.Controller
-import com.practice.com.storedetails.dao.StoreDetailsJPA
+import com.practice.com.storedetails.dao.StoreDetailsRepository
 import com.practice.com.storedetails.model.AddressPeriod
 import com.practice.com.storedetails.model.StoreAddress
 import com.practice.com.storedetails.model.StoreDetails
-import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 //import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.skyscreamer.jsonassert.JSONAssert
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
@@ -32,7 +30,7 @@ class StoreDetailsApplicationTests {
 	lateinit var mockBean: MockMvc
 
 	@MockBean
-	lateinit var storeDetailsJPA: StoreDetailsJPA
+	lateinit var storeDetailsRepository: StoreDetailsRepository
 
 	@org.junit.Test
 	fun testGetAllRequest() {
@@ -40,7 +38,7 @@ class StoreDetailsApplicationTests {
 		val addressPeriod = listOf<AddressPeriod>(AddressPeriod(LocalDate.of(2021, 1,1), LocalDate.of(2022, 1,1), storeAddress))
 		val storeDetails = listOf<StoreDetails>(StoreDetails(1, "store 1", "Active", LocalDate.of(2021, 1,1), LocalDate.of(2021, 2,1), addressPeriod))
 
-		Mockito.`when`(storeDetailsJPA.findAll()).thenReturn(storeDetails)
+		Mockito.`when`(storeDetailsRepository.findAll()).thenReturn(storeDetails)
 
 		val requestBuilder: RequestBuilder = MockMvcRequestBuilders.get("/store-service/v1/stores")
 
@@ -58,7 +56,7 @@ class StoreDetailsApplicationTests {
 		val addressPeriod = listOf<AddressPeriod>(AddressPeriod(LocalDate.of(2021, 1,1), LocalDate.of(2022, 1,1), storeAddress))
 		val storeDetails = Optional.ofNullable(StoreDetails(1, "store 1", "Active", LocalDate.of(2021, 1,1), LocalDate.of(2021, 2,1), addressPeriod))
 
-		Mockito.`when`(storeDetailsJPA.findById(1)).thenReturn(storeDetails)
+		Mockito.`when`(storeDetailsRepository.findById(1)).thenReturn(storeDetails)
 
 		val requestBuilder: RequestBuilder = MockMvcRequestBuilders.get("/store-service/v1/stores/1")
 

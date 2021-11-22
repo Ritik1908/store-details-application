@@ -7,14 +7,13 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDate
 import java.util.*
 
-@Document
-@JsonFilter("StoreDetailsFilter")
-data class StoreDetails(
+@Document("store-master")
+data class StoreDetails(g
     @Id
-    var id: Int,
+    val id: Int,
     var name: String,
     var status: String,
-    var createdAt: LocalDate,
+    val createdAt: LocalDate,
     @JsonProperty("lastUpdated")
     var updatedAt: LocalDate,
     var addressPeriod: List<AddressPeriod>
