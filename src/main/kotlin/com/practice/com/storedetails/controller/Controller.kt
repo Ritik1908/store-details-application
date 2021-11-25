@@ -11,8 +11,11 @@ import java.util.*
 class Controller (val storeService: StoreService) {
 
     @GetMapping(endpointUrl)
-    fun getStores(@RequestParam(name = "refDate", required = false) date: String?): List<StoreDetails> {
-        return storeService.getAll(date)
+    fun getStores(
+        @RequestParam(name = "refDate", required = false) date: String?,
+        @RequestParam(name="futureFlag", required = false) futureFlag: String? = "F"
+    ): List<StoreDetails> {
+        return storeService.getAll(date, futureFlag)
     }
 
     @GetMapping("$endpointUrl{id}")

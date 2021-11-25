@@ -6,6 +6,7 @@ import java.time.LocalDate
 
 interface StoreDetailsRepository: MongoRepository<StoreDetails, Int> {
 
-    fun findByUpdatedAtGreaterThan(date: LocalDate): List<StoreDetails>
-
+//    fun findByUpdatedAtGreaterThan(date: LocalDate): List<StoreDetails>
+    fun findByAddressPeriodDateValidFromLessThan(date: LocalDate): List<StoreDetails>
+    fun findByAddressPeriodDateValidFromLessThanAndAddressPeriodDateValidUntilNull(date: LocalDate): List<StoreDetails>
 }

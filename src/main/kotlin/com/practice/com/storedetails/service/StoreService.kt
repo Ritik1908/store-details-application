@@ -11,12 +11,18 @@ import java.util.*
 @Service
 class StoreService (val storeDetailsRepository: StoreDetailsRepository) {
 
-    fun getAll(date: String?): List<StoreDetails> {
+    fun getAll(date: String?, futureFlag: String?): List<StoreDetails> {
+
         var data: List<StoreDetails> = mutableListOf()
-        data = if(date != null) {
+
+        data = if (date != null && futureFlag == "T") {
             val format = DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH)
             val dateConverted = (LocalDate.parse(date.toString(), format))
-            storeDetailsRepository.findByUpdatedAtGreaterThan(dateConverted)
+            storeDetailsRepository.findByAddressPeriodDateValidFromLessThanAndAddressPeriodDateValidUntilNull(dateConverted)
+        } else if(date != null) {
+            val format = DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH)
+            val dateConverted = (LocalDate.parse(date.toString(), format))
+            storeDetailsRepository.findByAddressPeriodDateValidFromLessThan(dateConverted)
         } else {
             storeDetailsRepository.findAll()
         }
