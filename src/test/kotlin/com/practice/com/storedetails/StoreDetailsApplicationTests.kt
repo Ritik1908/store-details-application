@@ -32,41 +32,41 @@ class StoreDetailsApplicationTests {
 	@MockBean
 	lateinit var storeDetailsRepository: StoreDetailsRepository
 
-	@org.junit.Test
-	fun testGetAllRequest() {
-		val storeAddress = StoreAddress("a", 1, "b", 1, "c", "d")
-		val addressPeriod = listOf<AddressPeriod>(AddressPeriod(LocalDate.of(2021, 1,1), LocalDate.of(2022, 1,1), storeAddress))
-		val storeDetails = listOf<StoreDetails>(StoreDetails(1, "store 1", "Active", LocalDate.of(2021, 1,1), LocalDate.of(2021, 2,1), addressPeriod))
-
-		Mockito.`when`(storeDetailsRepository.findAll()).thenReturn(storeDetails)
-
-		val requestBuilder: RequestBuilder = MockMvcRequestBuilders.get("/store-service/v1/stores")
-
-		val result: MvcResult = mockBean.perform(requestBuilder).andReturn()
-
-		val expected =
-			"[{'id':1, 'name': 'store 1', 'status': 'Active', 'lastUpdated': '2021-02-01', 'addressPeriod':[{'dateValidFrom': '2021-01-01', 'dateValidUntil': '2022-01-01', 'storeAddress':{'street': 'a', 'houseNumber':1, 'houseNumberSuffix': 'b', 'postalCode':1, 'city': 'c', 'country': 'd'}}]}]"
-
-		JSONAssert.assertEquals(expected, result.response.contentAsString, false)
-	}
-
-	@org.junit.Test
-	fun testGetRequest() {
-		val storeAddress = StoreAddress("a", 1, "b", 1, "c", "d")
-		val addressPeriod = listOf<AddressPeriod>(AddressPeriod(LocalDate.of(2021, 1,1), LocalDate.of(2022, 1,1), storeAddress))
-		val storeDetails = Optional.ofNullable(StoreDetails(1, "store 1", "Active", LocalDate.of(2021, 1,1), LocalDate.of(2021, 2,1), addressPeriod))
-
-		Mockito.`when`(storeDetailsRepository.findById(1)).thenReturn(storeDetails)
-
-		val requestBuilder: RequestBuilder = MockMvcRequestBuilders.get("/store-service/v1/stores/1")
-
-		val result: MvcResult = mockBean.perform(requestBuilder).andReturn()
-
-		val expected =
-			"{'id':1, 'name': 'store 1', 'status': 'Active', 'lastUpdated': '2021-02-01', 'addressPeriod':[{'dateValidFrom': '2021-01-01', 'dateValidUntil': '2022-01-01', 'storeAddress':{'street': 'a', 'houseNumber':1, 'houseNumberSuffix': 'b', 'postalCode':1, 'city': 'c', 'country': 'd'}}]}"
-
-		JSONAssert.assertEquals(expected, result.response.contentAsString, false)
-	}
+//	@org.junit.Test
+//	fun testGetAllRequest() {
+//		val storeAddress = StoreAddress("a", 1, "b", 1, "c", "d")
+//		val addressPeriod = listOf<AddressPeriod>(AddressPeriod(LocalDate.of(2021, 1,1), LocalDate.of(2022, 1,1), storeAddress))
+//		val storeDetails = listOf<StoreDetails>(StoreDetails(1, "store 1", "Active", LocalDate.of(2021, 1,1), LocalDate.of(2021, 2,1), addressPeriod))
+//
+//		Mockito.`when`(storeDetailsRepository.findAll()).thenReturn(storeDetails)
+//
+//		val requestBuilder: RequestBuilder = MockMvcRequestBuilders.get("/store-service/v1/stores")
+//
+//		val result: MvcResult = mockBean.perform(requestBuilder).andReturn()
+//
+//		val expected =
+//			"[{'id':1, 'name': 'store 1', 'status': 'Active', 'lastUpdated': '2021-02-01', 'addressPeriod':[{'dateValidFrom': '2021-01-01', 'dateValidUntil': '2022-01-01', 'storeAddress':{'street': 'a', 'houseNumber':1, 'houseNumberSuffix': 'b', 'postalCode':1, 'city': 'c', 'country': 'd'}}]}]"
+//
+//		JSONAssert.assertEquals(expected, result.response.contentAsString, false)
+//	}
+//
+//	@org.junit.Test
+//	fun testGetRequest() {
+//		val storeAddress = StoreAddress("a", 1, "b", 1, "c", "d")
+//		val addressPeriod = listOf<AddressPeriod>(AddressPeriod(LocalDate.of(2021, 1,1), LocalDate.of(2022, 1,1), storeAddress))
+//		val storeDetails = Optional.ofNullable(StoreDetails(1, "store 1", "Active", LocalDate.of(2021, 1,1), LocalDate.of(2021, 2,1), addressPeriod))
+//
+//		Mockito.`when`(storeDetailsRepository.findById(1)).thenReturn(storeDetails)
+//
+//		val requestBuilder: RequestBuilder = MockMvcRequestBuilders.get("/store-service/v1/stores/1")
+//
+//		val result: MvcResult = mockBean.perform(requestBuilder).andReturn()
+//
+//		val expected =
+//			"{'id':1, 'name': 'store 1', 'status': 'Active', 'lastUpdated': '2021-02-01', 'addressPeriod':[{'dateValidFrom': '2021-01-01', 'dateValidUntil': '2022-01-01', 'storeAddress':{'street': 'a', 'houseNumber':1, 'houseNumberSuffix': 'b', 'postalCode':1, 'city': 'c', 'country': 'd'}}]}"
+//
+//		JSONAssert.assertEquals(expected, result.response.contentAsString, false)
+//	}
 
 }
 

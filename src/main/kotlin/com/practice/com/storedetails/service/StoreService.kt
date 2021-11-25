@@ -3,12 +3,12 @@ package com.practice.com.storedetails.service
 import com.practice.com.storedetails.dao.StoreDetailsRepository
 import com.practice.com.storedetails.exception.NotFoundException
 import com.practice.com.storedetails.model.StoreDetails
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-@Component
+@Service
 class StoreService (val storeDetailsRepository: StoreDetailsRepository) {
 
     fun getAll(date: String?): List<StoreDetails> {
