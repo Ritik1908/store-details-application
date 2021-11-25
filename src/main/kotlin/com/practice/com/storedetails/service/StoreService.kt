@@ -1,6 +1,6 @@
 package com.practice.com.storedetails.service
 
-import com.practice.com.storedetails.dao.StoreDetailsRepository
+import com.practice.com.storedetails.repository.StoreDetailsRepository
 import com.practice.com.storedetails.exception.NotFoundException
 import com.practice.com.storedetails.model.StoreDetails
 import org.springframework.stereotype.Service
@@ -30,7 +30,7 @@ class StoreService (val storeDetailsRepository: StoreDetailsRepository) {
         val data = storeDetailsRepository.findById(id)
 
         if(data.isEmpty) {
-            throw NotFoundException("No store found with given id")
+            throw NotFoundException("No store found with id - $id")
         }
         return data
     }
