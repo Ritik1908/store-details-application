@@ -11,25 +11,35 @@ import java.util.*
 @Service
 class StoreService (val storeDetailsRepository: StoreDetailsRepository) {
 
-    fun getAll(date: String?, futureFlag: String?): List<StoreDetails> {
-
-        var data: List<StoreDetails> = mutableListOf()
-
-        data = if (date != null && futureFlag == "T") {
-            val format = DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH)
-            val dateConverted = (LocalDate.parse(date.toString(), format))
-            storeDetailsRepository.findByAddressPeriodDateValidFromLessThanAndAddressPeriodDateValidUntilNull(dateConverted)
-        } else if(date != null) {
-            val format = DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.ENGLISH)
-            val dateConverted = (LocalDate.parse(date.toString(), format))
-            storeDetailsRepository.findByAddressPeriodDateValidFromLessThan(dateConverted)
-        } else {
-            storeDetailsRepository.findAll()
+    fun filterCurrentRecords(output: List<StoreDetails>, refDate: LocalDate): List<StoreDetails> {
+        output.forEach { store ->
+            store.addressPeriod =
+                store.addressPeriod.filter { validity ->  validity.dateValidFrom <= refDate && (validity.dateValidUntil == null ||  validity.dateValidUntil!! >= refDate) }
         }
-        if(data.isEmpty()) {
-            throw NotFoundException("No records present in database")
+        return output
+    }
+
+    fun filterCurrentAndFutureRecords(output: List<StoreDetails>, refDate: LocalDate): List<StoreDetails> {
+        output.forEach { store ->
+            store.addressPeriod =
+                store.addressPeriod.filter { validity ->  (validity.dateValidFrom <= refDate && (validity.dateValidUntil == null ||  validity.dateValidUntil!! >= refDate)) || validity.dateValidFrom >= refDate }
         }
-        return data
+        return output
+    }
+
+    fun getAll(date: LocalDate?, futureFlag: Boolean = false): List<StoreDetails> {
+
+        var output: List<StoreDetails> = storeDetailsRepository.findAll().ifEmpty { throw NotFoundException("No records present in database") }
+
+        if(date != null) {
+            output = if (!futureFlag) {
+                filterCurrentRecords(output, date)
+            } else {
+                filterCurrentAndFutureRecords(output, date)
+            }
+        }
+        output = output.filter{ store -> store.addressPeriod.isNotEmpty()}.ifEmpty { throw NotFoundException("No records present in database") }
+        return output
     }
 
     fun getById(id: Int): Optional<StoreDetails> {

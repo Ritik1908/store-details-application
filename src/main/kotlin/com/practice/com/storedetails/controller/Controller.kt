@@ -5,6 +5,7 @@ import com.practice.com.storedetails.configuration.endpointUrl
 import com.practice.com.storedetails.model.StoreDetails
 import com.practice.com.storedetails.service.StoreService
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 import java.util.*
 
 @RestController
@@ -12,8 +13,8 @@ class Controller (val storeService: StoreService) {
 
     @GetMapping(endpointUrl)
     fun getStores(
-        @RequestParam(name = "refDate", required = false) date: String?,
-        @RequestParam(name="futureFlag", required = false) futureFlag: String? = "F"
+        @RequestParam(name = "refDate", required = false) date: LocalDate?,
+        @RequestParam(name="futureFlag", required = false) futureFlag: Boolean = false
     ): List<StoreDetails> {
         return storeService.getAll(date, futureFlag)
     }
