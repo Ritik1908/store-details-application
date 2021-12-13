@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.context.request.WebRequest
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import org.springframework.web.servlet.NoHandlerFoundException
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.util.*
+
 
 @ControllerAdvice
 @RestController
@@ -19,9 +22,15 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
         return ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
-    @ExceptionHandler(NotFoundException::class)
-    fun handleNotFoundException(ex: NotFoundException, request: WebRequest): ResponseEntity<Any>? {
+    @ExceptionHandler(CustomExceptionMessage::class)
+    fun handleNotFoundException(ex: CustomExceptionMessage, request: WebRequest): ResponseEntity<Any>? {
         val exceptionResponse = ExceptionResponse(Date(),  ex.message, request.getDescription(false))
+        return ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    fun handleException(ex: MethodArgumentTypeMismatchException, request: WebRequest): ResponseEntity<Any>? {
+        val exceptionResponse = ExceptionResponse(Date(),  "Illegal arguments passed in request parameter", request.getDescription(false))
         return ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND)
     }
 

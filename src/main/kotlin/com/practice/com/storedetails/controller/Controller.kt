@@ -1,6 +1,6 @@
 package com.practice.com.storedetails.controller
 
-
+import com.practice.com.storedetails.configuration.endpointId
 import com.practice.com.storedetails.configuration.endpointUrl
 import com.practice.com.storedetails.model.StoreDetails
 import com.practice.com.storedetails.service.StoreService
@@ -19,7 +19,7 @@ class Controller (val storeService: StoreService) {
         return storeService.getAll(date, futureFlag)
     }
 
-    @GetMapping("$endpointUrl{id}")
+    @GetMapping(endpointId)
     fun getStore(@PathVariable id: Int): Optional<StoreDetails> {
         return storeService.getById(id)
     }
@@ -27,5 +27,15 @@ class Controller (val storeService: StoreService) {
     @PostMapping(endpointUrl)
     fun saveStoreDetails(@RequestBody request: StoreDetails): String {
         return storeService.saveStore(request)
+    }
+
+    @PutMapping(endpointUrl)
+    fun updateStoreDetails(@RequestBody request: StoreDetails): String {
+        return storeService.updateStore(request)
+    }
+
+    @DeleteMapping(endpointId)
+    fun deleteStoreDetails(@PathVariable id: Int): String {
+        return storeService.deleteStore(id)
     }
 }
