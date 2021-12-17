@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository
 import java.time.LocalDate
 
 interface StoreDetailsRepository: MongoRepository<StoreDetails, Int> {
-
+    fun findByAddressPeriodDateValidUntilGreaterThanOrAddressPeriodDateValidUntilNull(refDate: LocalDate?): MutableList<StoreDetails>
 }

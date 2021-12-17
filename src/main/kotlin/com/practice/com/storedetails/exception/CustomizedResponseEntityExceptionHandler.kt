@@ -2,12 +2,14 @@ package com.practice.com.storedetails.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.validation.FieldError
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
-import org.springframework.web.servlet.NoHandlerFoundException
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.util.*
 
@@ -30,6 +32,15 @@ class CustomizedResponseEntityExceptionHandler: ResponseEntityExceptionHandler()
 
     @ExceptionHandler(MethodArgumentTypeMismatchException::class)
     fun handleException(ex: MethodArgumentTypeMismatchException, request: WebRequest): ResponseEntity<Any>? {
+        val exceptionResponse = ExceptionResponse(Date(),  "Illegal arguments passed in request parameter", request.getDescription(false))
+        return ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND)
+    }
+
+    protected fun handleHttpMessageNotReadableException(
+        ex: MethodArgumentNotValidException,
+        request: WebRequest
+    ): ResponseEntity<Any?>? {
+    println("Ok")
         val exceptionResponse = ExceptionResponse(Date(),  "Illegal arguments passed in request parameter", request.getDescription(false))
         return ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND)
     }

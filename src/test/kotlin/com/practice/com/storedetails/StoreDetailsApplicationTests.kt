@@ -48,7 +48,7 @@ class StoreDetailsApplicationTests {
 		val addressPeriod = listOf<AddressPeriod>(AddressPeriod(LocalDate.of(2021, 1,1), LocalDate.of(2022, 1,1), storeAddress))
 		val storeDetails = listOf<StoreDetails>(StoreDetails(1, "store 1", "Active", createdAt, updatedAt, addressPeriod))
 
-		Mockito.`when`(storeService.getAll(null, false)).thenReturn(storeDetails)
+		Mockito.`when`(storeService.getAll(LocalDate.now(), false)).thenReturn(storeDetails)
 
 		val requestBuilder: RequestBuilder = MockMvcRequestBuilders.get("/store-service/v1/stores/")
 
