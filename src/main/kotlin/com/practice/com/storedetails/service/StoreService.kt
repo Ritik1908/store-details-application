@@ -1,8 +1,10 @@
 package com.practice.com.storedetails.service
 
 import com.practice.com.storedetails.exception.CustomExceptionMessage
+import com.practice.com.storedetails.model.AddressPeriod
 import com.practice.com.storedetails.repository.StoreDetailsRepository
 import com.practice.com.storedetails.model.StoreDetails
+import org.apache.tomcat.jni.Local
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -13,20 +15,29 @@ import java.util.*
 @Service
 class StoreService (val storeDetailsRepository: StoreDetailsRepository) {
 
-    fun filterCurrentRecords(output: List<StoreDetails>, refDate: LocalDate): List<StoreDetails> {
-        output.forEach { store ->
-            store.addressPeriod =
-                store.addressPeriod.filter { validity ->  validity.dateValidFrom <= refDate && (validity.dateValidUntil == null ||  validity.dateValidUntil!! >= refDate) }
+    fun isPresent(dateValidFrom: LocalDate, dateValidUntil: LocalDate?, refDate: LocalDate): Boolean {
+        if((dateValidFrom < refDate) && (dateValidUntil == null || dateValidUntil > refDate)) {
+            return true
         }
-        return output
+        return false
     }
 
-    fun filterCurrentAndFutureRecords(output: List<StoreDetails>, refDate: LocalDate): List<StoreDetails> {
-        output.forEach { store ->
-            store.addressPeriod =
-                store.addressPeriod.filter { validity ->  validity.dateValidUntil == null ||  validity.dateValidUntil!! >= refDate }
+    fun isFutureOrCurrent(dateValidUntil: LocalDate?, refDate: LocalDate): Boolean {
+        if(dateValidUntil == null || dateValidUntil > refDate) {
+            return true
         }
-        return output
+        return false
+    }
+
+    fun transformStore(store: StoreDetails, refDate: LocalDate, futureFlag: Boolean): StoreDetails {
+        val filteredAddress = mutableListOf<AddressPeriod>()
+
+        store.addressPeriod
+            .filter {
+                (if(!futureFlag) isPresent(it.dateValidFrom, it.dateValidUntil, refDate) else isFutureOrCurrent(it.dateValidUntil, refDate))
+            }
+            .toCollection(filteredAddress)
+        return StoreDetails(store.id, store.name, store.status, store.createdAt, store.updatedAt, filteredAddress)
     }
 
     fun getAll(date: LocalDate?, futureFlag: Boolean): List<StoreDetails> {
@@ -39,20 +50,18 @@ class StoreService (val storeDetailsRepository: StoreDetailsRepository) {
                 throw CustomExceptionMessage("No records present in database")
             }
 
-        output = if (!futureFlag) {
-            filterCurrentRecords(output, refDate)
-        } else {
-            filterCurrentAndFutureRecords(output, refDate)
-        }
 
-        output = output
+        var filteredDate: List<StoreDetails> = output.map { store -> transformStore(store, refDate, futureFlag) }
+
+        filteredDate = filteredDate
             .filter { store -> store.addressPeriod.isNotEmpty() }
             .ifEmpty { throw CustomExceptionMessage("No records present in database") }
 
-        return output
+        return filteredDate
     }
 
     fun getById(id: Int): Optional<StoreDetails> {
+        println("Get By Id request triggered")
         val data = storeDetailsRepository.findById(id)
         if(data.isEmpty) {
             throw CustomExceptionMessage("No store found with id - $id")
